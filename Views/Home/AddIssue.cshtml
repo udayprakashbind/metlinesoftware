@@ -1,0 +1,245 @@
+﻿@model StoreMgmt.Models.Issue
+
+@{
+    ViewBag.Title = "AddIssue";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#ItemQuantity').hide();
+        $('#ItemWeightAvailable').hide();
+
+
+        $('#quantityfield').hide();
+        $('#itemweightfield').hide();
+
+        $("input[name='chooseItem']").change(function () {
+            var a = $(this).val();
+            //   alert(a);
+
+            if (a == 'Quantity') {
+                $('#quantityfield').show();
+                $('#itemweightfield').hide();
+
+
+            } else if (a == 'ItemWeight') {
+                $('#quantityfield').hide();
+                $('#itemweightfield').show();
+
+            } else {
+
+
+                $('#quantityfield').show();
+                $('#itemweightfield').hide();
+
+            }
+
+        });
+
+    });
+
+</script>
+
+
+<script>
+
+
+    function getNewVal(item) {
+
+
+        var itemId = item.value;
+        // alert(itemId);
+
+        //if (itemId == '' || itemId == 0 || itemId == null) {
+
+        //    itemId = 0;
+        //}
+        if (itemId !== '') {
+
+
+            var url = '/Home/GetItemStockDetailsByItemId/' + itemId;
+            $.ajax(url, {
+                dataType: 'json',
+                timeout: 500,
+                success: function (data, status, xhr) {
+                    if (data.Quantityavailability != null && data.ItemWeightavailability != null) {
+
+
+                        $('#ItemQuantity').show();
+                        $('#ItemWeightAvailable').show();
+                        $('#selectmessage').hide();
+
+                        $('#ItemQuantity').find('.totalItemQuantity').html('<span style="color:green;font-size:bold">' + data.Quantityavailability + '</span>');
+                        $('#ItemWeightAvailable').find('.ItemWeightAvailable').html('<span style="color:green;font-size:bold">' + data.ItemWeightavailability + '</span>');
+
+                        // $('#ItemWeightAvailable').hide();
+
+
+                    }
+                    else {
+                        $('#ItemQuantity').show();
+                        $('#ItemWeightAvailable').show();
+                        $('#selectmessage').hide();
+
+
+                        $('#ItemQuantity').find('.totalItemQuantity').html('<span style="color:red">' + 0 + '<span>');
+                        $('#ItemWeightAvailable').find('.ItemWeightAvailable').html('<span style="color:red">' + 0 + '<span>');
+
+                        //  $('#ItemWeightAvailable').find('.ItemWeightAvailable').html('<span style="color:green;font-size:bold">' + data.ItemWeightavailability + '</span>');
+
+
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                }
+            });
+        }
+        else {
+            $('#selectmessage').show();
+
+            $('#selectmessage').html('<span style="color:red">please selcet Item<span>');
+            $('#ItemQuantity').hide();
+            $('#ItemWeightAvailable').hide();
+
+        }
+
+
+    }
+</script>
+
+
+
+@Html.ActionLink("Show List", "IssueList", null, new { @class = "btn btn-info btn-lg text-bold" })
+<br />
+
+
+@using (Html.BeginForm("AddIssue", "Home", FormMethod.Post))
+{
+
+    @Html.AntiForgeryToken()
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <section class="content mt-3 " id="addIssue">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Issue</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <label for="inputStatus">Select Item</label>
+
+                            @Html.DropDownList("ddlItem", ViewBag.itmslist as SelectList, "Select Item", new { @class = "form-control custom-select", onchange = "getNewVal(this)" ,@id="Itemchosen"})
+
+                            @Html.ValidationMessageFor(model => model.ddlItem, "", new { @class = "text-danger" })
+                        </div>
+                        <p id="ItemQuantity"><label> Available Quantity : </label> <span class="totalItemQuantity"></span> </p>
+                        <p id="ItemWeightAvailable"><label> Available Weight : </label> <span class="ItemWeightAvailable"></span> </p>
+                        <span id="selectmessage"></span>
+                        <div class="form-group">
+                            <label for="inputStatus">Issue Department</label>
+                            @Html.DropDownList("ddlDept", ViewBag.deptlist as SelectList, "Select Department", new { @class = "form-control custom-select" ,@id= "deptchoose" })
+
+                            @Html.ValidationMessageFor(model => model.ddlDept, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label for="inputStatus">Select Person Name</label>
+                            @Html.DropDownList("ddlPerson", ViewBag.prsnlist as SelectList, "Select Person", new { @class = "form-control custom-select", @id = "personchoose" })
+
+                            @Html.ValidationMessageFor(model => model.ddlPerson, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <label for="radioForItem">Choose</label> &nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <input type="radio" name="chooseItem" id="Quntity" value="Quantity" />&nbsp; <text>Quantity</text>
+                            &nbsp;&nbsp; <input type="radio" name="chooseItem" id="ItemWeight" value="ItemWeight" /> &nbsp; <text>Weight</text>
+
+                        </div>
+
+                        <div class="form-group" id="quantityfield">
+                            <label for="inputName"> Item Quantity </label>
+                            <input type="number" id="quantity" name="quantity" class="form-control">
+                            @Html.ValidationMessageFor(model => model.quantity, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group" id="itemweightfield">
+                            <label for="inputName">Item Weight</label>
+                            <input type="text" id="ItemWeight" name="ItemWeight" class="form-control">
+                            @Html.ValidationMessageFor(model => model.ItemWeight, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+
+
+
+                        @*<div class="form-group">
+                                <label for="inputName">Quantity</label>
+                                <input type="text" id="inputQuantity" name="quantity" class="form-control">
+                                @Html.ValidationMessageFor(model => model.quantity, "", new { @class = "text-danger" })
+
+                            </div>*@
+
+                        <div class="form-group">
+                            <label for="inputName">For Use </label>
+                            <input type="text" id="inputUse" name="useFor" class="form-control">
+                            @Html.ValidationMessageFor(model => model.useFor, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">Serial No. </label>
+                            <input type="text" id="inputSerial" name="serialNo" class="form-control">
+                            @Html.ValidationMessageFor(model => model.serialNo, "", new { @class = "text-danger" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 mx-auto  h-100 d-flex align-items-center justify-content-center">
+                <a href="@Url.Action("IssueList")" style="width:200px;" class="btn btn-secondary btn-lg">Cancel</a>
+                &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;
+                <input type="submit" style="width:200px" value="Save" class="btn btn-success btn-lg ">
+            </div>
+        </div>
+
+    </section>
+
+}
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#Itemchosen').chosen();
+        $('#deptchoose').chosen();
+        $('#personchoose').chosen();
+
+    })
+</script>

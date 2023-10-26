@@ -1,0 +1,357 @@
+﻿@model StoreMgmt.Models.Polishing_Model
+
+@{
+    ViewBag.Title = "IssuePolishing";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+@Html.Raw(@TempData["InsertMessage"])
+@Html.Raw(@TempData["updateMessage"])
+@Html.Raw(@TempData["DeleteMessage"])
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<link href="~/Scripts/DataTables/datatables.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/DataTables/datatables.min.js"></script>
+
+
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/jquery.dataTables.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/Buttons-2.3.6/css/buttons.bootstrap5.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/Buttons-2.3.6/css/buttons.bootstrap4.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables/Buttons-2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/DataTables/Buttons-2.3.6/js/buttons.bootstrap4.min.js"></script>
+
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+<style>
+    .hiddenId {
+        display: none;
+    }
+
+    .jobhide {
+        display: none;
+    }
+
+    .coilhide {
+        display: none;
+    }
+</style>
+
+
+
+
+
+<script>
+
+
+
+    function getNewVal(item) {
+        // alert(item.value);
+        var Job = item.value;
+
+        if (Job == 'Circle') {
+            $('.circlejob').show();
+            $('.blankjob').hide();
+
+        }
+        else if (Job == 'Blank') {
+
+            $('.circlejob').hide();
+            $('.blankjob').show();
+
+        }
+        else {
+
+            $('.circlejob').hide();
+            $('.blankjob').hide();
+        }
+
+    };
+
+
+
+
+
+
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+
+
+
+        
+
+        $('.filtertable').DataTable(
+            {
+                "dom": '<"dt-buttons"Bf><"clear">lirtp',
+                "paging": true,
+                "autoWidth": true,
+
+
+            }
+        );
+
+
+        $(document).on('click', 'table.filtertable tbody tr', function () {
+            // var thickness = $(this).find('.thickness').text();
+            var jobname = $(this).find('.jobname').text();
+            var jobweight = $(this).find('.jobweight').text();
+            var jobpices = $(this).find('.jobpices').text();
+            var findcode = $(this).find('.findcode').text();
+            var remark = $(this).find('.remark').text();
+            //  var width = $(this).find('.width').text();
+            var rowId = $(this).find('.hiddenId').text();
+            //  $('#Weight').val('');
+            $('#JobWeight').val(jobweight);
+            $('#JobPices').val(jobpices);
+            $('#JobName').val(jobname);
+            $('#Code').val(findcode);
+            $('#remark').val(remark);
+            //  $('#oldWidth').val(width);
+            //  $('#Thickness').val(thickness);
+            $('#JobId').val(rowId);
+            calculateRecovery();
+
+        });
+
+
+
+
+
+    });
+
+
+
+    function calculateValue() {
+        var JobWeight = parseFloat($('#JobWeight').val());
+        var JobIssueWeight = parseFloat($('#JobIssueWeight').val());
+        var PolishWeight = parseFloat($('#PolishWeight').val());
+        var JobPices = parseFloat($('#JobPices').val());
+
+        var onePicesInKg = JobWeight / JobPices;
+        var Pices = 1;
+        var n = Math.trunc(PolishWeight / onePicesInKg);
+        Pices = n * Pices;
+        // alert(Pices);
+        var polishscrap = JobIssueWeight - PolishWeight;
+        $('#Polishscrap').val(polishscrap);
+        $('#Pices').val(Pices);
+
+    };
+
+</script>
+
+
+
+
+@using (Html.BeginForm("IssuePolishing", "Home", FormMethod.Post))
+{
+    <center><h1>Issue Polishing</h1></center>
+
+    <section class="content mt-3 ">
+        <div class="row">
+            <div class="col-md-10  mx-auto">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Issue Polishing</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="inputStatus">Select Job Type</label>
+                            <select name="JobType" id="JobType" class="form-control" onchange="getNewVal(this);">
+                                <option value="" required>Select</option>
+                                <option value="Circle">Circle</option>
+                                <option value="Blank">Blank</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.JobType, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group circlejob jobhide" id="circlejob">
+                            <table id="table1" class=" filtertable table table-bordered table-hover">
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th class="hiddenId">jobId</th>
+                                        <th>Job Type</th>
+                                        <th>Grade</th>
+                                        <th>Remark</th>
+                                        <th> Job Name</th>
+                                        <th>Job Weight (Kg)</th>
+                                        <th> Thickness (mm)</th>
+                                        <th> Diameter (Inch)</th>
+                                        <th>Pices</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int b = 1;
+                                        foreach (var item in ViewBag.JobDetails)
+                                        {
+                                            if (item.CuttingWeight != "0" && item.CuttingWeight != null && item.CuttingWeight != "" && item.JobType == "Circle")
+                                            {
+
+                                                <tr>
+                                                    <td>@b</td>
+                                                    <td class="hiddenId">@item.Id</td>
+                                                    <td>@item.JobType</td>
+                                                    <td class="findcode">@item.Code</td>
+                                                    <td class="remark">@item.remark</td>
+                                                    <td class="jobname">@item.CoilName</td>
+                                                    <td class="jobweight">@item.CuttingWeight</td>
+                                                    <td>@item.Thickness</td>
+                                                    <td>@item.Diameter</td>
+                                                    <td class="jobpices">@item.Pices</td>
+                                                </tr>
+                                                b++;
+
+                                            }
+
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group blankjob jobhide" id="blankjob">
+                            <table id="table2" class=" filtertable table table-bordered table-hover">
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th class="hiddenId">hiddenID</th>
+                                        <th>Job Type</th>
+                                        <th>Grade</th>
+                                        <th>Remark</th>
+                                        <th> Job Name</th>
+                                        <th>Weight (Kg)</th>
+                                        <th> Thickness (mm)</th>
+                                        <th> Diameter (Inch)</th>
+                                        <th>Pices</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int c = 1;
+                                        foreach (var item in ViewBag.JobDetails)
+                                        {
+                                            if (item.CuttingWeight != "0" && item.CuttingWeight != null && item.CuttingWeight != "" && item.JobType == "Blank")
+                                            {
+
+                                                <tr>
+                                                    <td>@c</td>
+
+                                                    <td class="hiddenId">@item.Id</td>
+                                                    <td>@item.JobType</td>
+
+                                                    <td class="findcode">@item.Code</td>
+                                                    <td class="remark">@item.remark</td>
+                                                    <td class="jobname">@item.CoilName</td>
+                                                    <td class="jobweight">@item.CuttingWeight</td>
+                                                    <td class="thickness">@item.Thickness</td>
+                                                    <td>@item.Diameter</td>
+                                                    <td class="jobpices">@item.Pices</td>
+                                                </tr>
+                                                c++;
+
+                                            }
+
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label for="InputRemark"> Remark</label>
+                            <input type="text" name="remark" id="remark" class="form-control" readonly />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputStatus">Select Item</label>
+                            @Html.DropDownListFor(model => model.ItemName, ViewBag.ddlItems as SelectList, "Select Item", htmlAttributes: new { @class = "form-control  custom-select", @id = "Itemchosen" })
+
+                            @Html.ValidationMessageFor(model => model.ItemName, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="InputWeight"> Job Name</label>
+                            <input type="text" name="JobName" id="JobName" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="InputWeight"> Job Issue (In Kg)</label>
+                            <input type="text" name="JobIssueWeight" id="JobIssueWeight" class="form-control" />
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="InputWeight"> Issue To Polish (In Kg)</label>
+                            @* <input type="text" name="PolishWeight" id="PolishWeight" @onblur="calculateValue()" class="form-control" />*@
+                            @Html.TextBoxFor(model => model.PolishWeight, new { @onblur = "calculateValue()", @class = "form-control", @id = "PolishWeight", @name = "PolishWeight" })
+
+                        </div>
+                        <input type="hidden" name="Polishscrap" id="Polishscrap" class="form-control" />
+
+
+                        <div class="form-group">
+                            <label for="inputStatus">Polish Pices</label>
+                            <input type="text" name="PolishPices" id="Pices" class="form-control" />
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <input type="hidden" name="JobId" id="JobId" />
+
+                            <input type="hidden" name="JobWeight" id="JobWeight" class="form-control" />
+                            <input type="hidden" name="JobPices" id="JobPices" class="form-control" />
+                            <input type="hidden" name="Code" id="Code" class="form-control" />
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 mx-auto h-100 d-flex align-items-center justify-content-center">
+                <a href="@Url.Action("IssuePolishing")" style="width:200px;" class="btn btn-secondary btn-lg">Cancel</a>
+                &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;
+                <input type="submit" style="width:200px" value="Issue To Polish" class="btn btn-success btn-lg ">
+            </div>
+        </div>
+    </section>
+
+
+}
+
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#Itemchosen').chosen();
+        $('#deptchoose').chosen();
+        $('#personchoose').chosen();
+
+    })
+</script>

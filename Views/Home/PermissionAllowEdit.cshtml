@@ -1,0 +1,105 @@
+﻿@model IEnumerable<StoreMgmt.Models.RolePermission>
+@*@model StoreMgmt.Models.RolePermission*@
+
+@{
+    ViewBag.Title = "PermissionAllowEdit";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+
+@using (Html.BeginForm("PermissionAllowEdit", "Home", FormMethod.Post))
+{
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-12 mb-2 ">
+                    @Html.ActionLink("<< Back", "RolePermissionList", null, new { @class = "btn btn-dark btn-lg float-right" })
+
+                </div>
+            </div>
+            @{
+                var RoleName = "";
+                var RoleId = 0;
+                foreach (var item in ViewBag.roleData as List<StoreMgmt.Models.Role_model>)
+                {
+                    RoleName = item.RoleName;
+                    RoleId = item.Id;
+                }
+
+
+            }
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <label for="inputStatus">Role :<span style="color:red"> @RoleName</span></label>
+
+                            <h3 class="card-title float-right">Permission list show below</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <input type="hidden" name="Role_Id" value="@RoleId" />
+
+                            </div>
+                            <table id="example2" class="table table-bordered table-hover table-striped justify-content-center text-center">
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th>Permission Name</th>
+                                        <th>Access Allow</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    @{
+                                        int i = 1;
+                                        foreach (var item in Model)
+                                        {
+
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@item.PermissionName</td>
+                                                @{ if (@item.Perm_Id == 1)
+                                                    {
+                                                        <td>  <input type="checkbox" name="Permission_Id[]" value="@item.Id" checked></td>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>  <input type="checkbox" name="Permission_Id[]" value="@item.Id"></td>
+
+                                                    }
+                                                }
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+
+
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row my-2">
+            <div class="col-md-10">
+                <input type="submit" style="width:200px" value="Update" class="btn btn-success btn-lg ">
+
+            </div>
+        </div>
+    </section>
+}

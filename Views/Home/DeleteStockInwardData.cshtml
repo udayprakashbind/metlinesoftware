@@ -1,0 +1,99 @@
+﻿@model StoreMgmt.Models.StockInward
+
+@{
+    ViewBag.Title = "DeleteStockInwardData";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+
+
+<section class="content mx-auto "  >
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Are you sure you want to delete selected Stock ?</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <h4>StockInward</h4>
+                        <hr />
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ddlVendor)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.ddlVendor)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ddlItem)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.ddlItem)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ddlPerson)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.ddlPerson)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Quantity)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Quantity)
+                            </dd>
+
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ItemWeight)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.ItemWeight)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Rate)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Rate)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Remark)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Remark)
+                            </dd>
+
+
+                        </dl>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-actions no-color">
+                                <input type="submit" value="Delete" class="btn btn-danger" /> ||
+                                @Html.ActionLink("Back", "StockInwardList", null, new { @class = "btn btn-dark" })
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

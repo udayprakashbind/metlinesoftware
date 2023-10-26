@@ -1,0 +1,10 @@
+﻿
+@{
+    ViewBag.Title = "VendorMaster";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+<h2>Vendor Master</h2>
+<br />
+@Html.ActionLink("Add Vendor", "AddVendor", null, new { @class = "btn btn-success btn-lg text-bold" }) &nbsp; &nbsp; &nbsp;
+@Html.ActionLink("Vendor List", "VendorList", null, new { @class = "btn btn-info btn-lg text-bold" })

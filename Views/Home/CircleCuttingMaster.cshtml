@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "CircleCuttingMaster";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+<h2>Circle Cutting Master</h2>
+
+@Html.ActionLink("Add Coil", "AddCoil", null, new { @class = "btn btn-success btn-lg text-bold" }) &nbsp; &nbsp; &nbsp;
+@Html.ActionLink("Coil List", "CoilList", null, new { @class = "btn btn-info btn-lg text-bold" }) &nbsp; &nbsp; &nbsp; ||&nbsp; &nbsp; &nbsp;
+
+
+@Html.ActionLink("Add Circle", "AddCircle", null, new { @class = "btn btn-success btn-lg text-bold" })&nbsp; &nbsp; &nbsp;
+@Html.ActionLink("Cirlce List", "CircleList", null, new { @class = "btn btn-info btn-lg text-bold" })&nbsp; &nbsp; || &nbsp; &nbsp;
+@Html.ActionLink("Add Blank", "AddBlank", null, new { @class = "btn btn-success btn-lg text-bold" })&nbsp; &nbsp; &nbsp;
+@Html.ActionLink("Blank List", "BlankList", null, new { @class = "btn btn-info btn-lg text-bold" })
+

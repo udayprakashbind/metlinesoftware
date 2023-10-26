@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+<h2>Report</h2>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("VendorReport")">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@ViewBag.VederCount</h3>
+
+                        <p>Vendor</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("PersonReport")">
+
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@ViewBag.PersonCount</h3>
+
+                        <p>Person</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("ItemReport")">
+
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>@ViewBag.ItemCount</h3>
+
+                        <p>Item</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("itemavailabilityReport")">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h4>Show</h4>
+                        <p>Item Availability Report</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("CoilReport")">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h4>Show</h4>
+                        <p>Coil History</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("GetTotalCircleList")">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@ViewBag.TotalCircleCount</h3>
+                        <p>All Circle List</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("GetTotalBlankList")">
+
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@ViewBag.TotalBlankCount</h3>
+
+                        <p>All Blank List</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("GetTotalCoilList")">
+
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@ViewBag.TotalCoilCount</h3>
+
+                        <p>All Coil List </p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("PolishReport")">
+
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@ViewBag.PolishingCount</h3>
+                        <p>Polish Report</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("PolishScrapReport")">
+
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@ViewBag.TotalPolishScrap Kg.</h3>
+                        <p>Polish Scrap Report</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("IssueItemReportByItem")">
+
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>@ViewBag.IssueCount</h3>
+                        <p>Issue Report</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("StockInwardReport")">
+
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@ViewBag.stockInwdCount</h3>
+
+                        <p>StockInward</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("JobReport")">
+
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@ViewBag.JobCount</h3>
+                        <p>Job Reports</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-lg-4 col-6">
+            <a href="@Url.Action("JobScrapReport")">
+
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3> @ViewBag.TotalJobScrap Kg.</h3>
+
+                        <p>Job Scrap Report</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>

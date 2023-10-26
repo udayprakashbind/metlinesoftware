@@ -1,0 +1,229 @@
+﻿@model IEnumerable<StoreMgmt.Models.jobdetail>
+
+@{
+    ViewBag.Title = "JobScrapReport";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+
+<div class="row my-3">
+
+
+    <div class="col-md-12">
+        @Html.ActionLink("<< Back", "Report", null, new { @class = "btn btn-dark btn-lg float-right" })
+
+    </div>
+</div>
+<center><h2>Job Scrap report</h2></center>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="~/Scripts/DataTables/datatables.min.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables/datatables.min.js"></script>
+
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('#example').DataTable(
+            {
+                "dom": '<"dt-buttons"Bf><"clear">lirtp',
+                "paging": true,
+                "autoWidth": true,
+
+
+            }
+        );
+
+
+
+        $("#myModal").on("hidden.bs.modal", function () {
+            var myTable = $('#itemHistory').DataTable();
+            myTable.destroy();
+        });
+
+
+        $('table tbody tr').click(function () {
+            var code = $(this).data('itemid');
+            // alert(rowId);
+            var url = '/Home/GetJobScrapDetailsByRowId/' + code;
+            $.ajax(url, {
+                dataType: 'json',
+                timeout: 500,
+                success: function (data, status, xhr) {
+                    //console.log(typeof data);
+                    var tableString = null;
+                    var i = 0;
+                    var CodeId = data.jobdeateils[0].Code;
+                    // alert(code);
+
+                    $.each(data.jobdeateils, function (index, value) {
+                        if (value.JobType != "Coil") {
+                            i++;
+                            tableString += '<tr>';
+                            tableString += '<td>' + i + '</td>';
+                            tableString += '<td>' + value.JobType + '</td>';
+                            tableString += '<td>' + value.remark + '</td>';
+                            tableString += '<td>' + value.CoilName + '</td>';
+                            tableString += '<td>' + value.Recovery + '</td>';
+                            tableString += '<td>' + value.Scrap + '</td>';
+                            tableString += '<td>' + value.Thickness + '</td>';
+                            tableString += '<td>' + value.Diameter + '</td>';
+                            tableString += '<td>' + value.Pices + '</td>';
+                            tableString += '</tr>';
+                        }
+                        //myTable.row.add([i, value.ddlVendor, value.ddlItem, value.ddlPerson, value.Quantity, value.Rate, value.Remark, value.Date]);
+                    });
+
+                    $('#myModal').find('.tableContent').html(tableString);
+                    var myTable = $('#itemHistory').DataTable({
+                        buttons: ['pdf']
+
+                    });
+                    myTable.draw();
+                    // $('#myModal').find('.model-title').html('<span style="color:red">' + CodeId + '</span>');
+                    $('#myModal').find('.JobScrap').html('<span style="color:red">' + data.totalJobScrap + '</span>');
+                    $('#myModal').find('.PolishScrap').html('<span style="color:green">' + data.totalPolishScrap + '</span>');
+                    $('#myModal').find('.totalScrap').html('<span style="color:orange">' + data.totalScrap + '</span>');
+                    $('#myModal').find('.coilJobScrap').html('<span style="color:Black">' + data.selectedcoilsJob + '</span>');
+                    $('#myModal').find('.modal-title').html('<span style="color:green;font-weight: bold;">' + CodeId + '</span');
+
+                    $('#myModal').modal('show');
+
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                }
+            });
+        });
+
+
+
+    });
+</script>
+
+
+<section class="content">
+    <div class="container-fluid">
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    @using (Html.BeginForm("JobScrapReport", "Home", FormMethod.Get))
+                    {
+
+                        <div class="card-header">
+                        </div>
+                        <div class="card-body">
+
+                            <table id="example" class="table table-striped table-bordered text-center" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th>Code</th>
+                                        <th>Remark</th>
+                                        <th>Coil Name</th>
+                                        <th>Scrap</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    @{
+                                        int b = 1;
+                                        foreach (var item in Model)
+                                        {
+                                            if (item.Scrap != "0")
+                                            {
+
+
+                                                <tr class="itmrow" data-itemid="@item.Code">
+                                                    <td>@b</td>
+                                                    <td>@item.Code</td>
+                                                    <td>@item.remark</td>
+                                                    <td>@item.CoilName</td>
+                                                    <td>@item.Scrap</td>
+                                                </tr>
+                                                b++;
+                                            }
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="myModal" style="width:100%">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title"><span class="code"></span> </h4>
+
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <label> Total Job Scrap: </label> <span class="JobScrap"></span>
+                        <label> Issue PolishScrap : </label> <span class="PolishScrap"></span>
+                        <label> Total Scrap  : </label> <span class="totalScrap"></span>
+                        <label> Selected Coil Job Scrap  : </label> <span class="coilJobScrap"></span>
+
+                        <table class="table table-striped" id="itemHistory">
+                            <thead>
+                                <tr class="bg-primary">
+                                    <th>Sr.No.</th>
+                                    <th>JobType</th>
+                                    <th>Remark</th>
+                                    <th>Coil Name</th>
+                                    <th> Recovery</th>
+                                    <th> Scrap</th>
+                                    <th> Thickness</th>
+                                    <th> Diameter</th>
+                                    <th>Pices</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tableContent">
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+<script>
+
+    $(document).ready(function () {
+        // document.title = 'Simple DataTable';
+
+    });
+
+</script>
+
+
+
+

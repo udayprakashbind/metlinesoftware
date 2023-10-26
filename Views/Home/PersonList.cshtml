@@ -1,0 +1,78 @@
+﻿@model IEnumerable<StoreMgmt.Models.Person>
+@{
+    ViewBag.Title = "PersonList";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+@Html.Raw(@TempData["InsertMessage"])
+@Html.Raw(@TempData["updateMessage"])
+@Html.Raw(@TempData["DeleteMessage"])
+
+
+
+
+@using (Html.BeginForm())
+{
+    <div class="row my-3">
+        <div class="col-md-6 ">
+            @Html.ActionLink("Add Person", "AddPerson", null, new { @class = "btn btn-success btn-lg text-bold float-left" })
+        </div>
+        <div class="col-md-6">
+            @Html.ActionLink("<< Back", "PersonMaster", null, new { @class = "btn btn-dark btn-lg float-right" })
+
+        </div>
+
+    </div>
+    <center> <h2>Person List</h2></center>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            @using (Html.BeginForm("PersonList", "Home", FormMethod.Get))
+                            {
+                                <b>Search By :</b>@Html.RadioButton("SearchBy", "Name", true)<text>Name</text>
+                                @Html.RadioButton("SearchBy", "Contact")<text>Contact</text>
+                                <br />
+                                @Html.TextBox("search")<button type="submit"> <i class="fa fa-search" aria-hidden="true"></i></button>
+                            }
+
+
+                        </div>
+                        <div class="card-body">
+                            <table id="example2" class="table table-bordered table-hover table-striped justify-content-center text-center">
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th>Person Name</th>
+                                        <th>Person Contact</th>
+                                        <th>Person Address</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int i = 1;
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@item.PersonName</td>
+                                                <td>@item.Contact</td>
+                                                <td>@item.Address</td>
+                                                <td><a href="@Url.Action("PersonDataEdit",new { id = item.Id })" class="btn btn-success" style="width:50px"><i class="fas fa-edit"></i></a> || <a href="@Url.Action("DeletePerson",new { id = item.Id })" class="btn btn-danger" style="width:50px"><i class="fas fa-solid fa-trash"></i></a></td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+}

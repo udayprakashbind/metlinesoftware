@@ -1,0 +1,67 @@
+﻿@model StoreMgmt.Models.ItemsModel
+
+@{
+    ViewBag.Title = "DeleteItemData";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+<h2>DeleteItemData</h2>
+
+<section class="content mt-3 mx-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Are you sure you want to delete this?</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                <h4>Selected Item</h4>
+                            <hr />
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.ItemName)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.ItemName)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.ItemCode)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.ItemCode)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.ItemDetails)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.ItemDetails)
+                                </dd>
+
+                            </dl>
+
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Delete" class="btn btn-danger" /> ||
+                        @Html.ActionLink("Back", "ItemList", null, new { @class = "btn btn-success" })
+
+                    </div>
+                            }
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>

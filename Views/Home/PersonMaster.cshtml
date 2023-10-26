@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "PersonMaster";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+<h2>PersonMaster</h2>
+
+<br />
+@Html.ActionLink("Add Person", "AddPerson", null, new { @class = "btn btn-success btn-lg text-bold" }) &nbsp; &nbsp; &nbsp;
+
+@Html.ActionLink("Person List", "PersonList", null, new { @class = "btn btn-info btn-lg text-bold" })
+

@@ -1,0 +1,123 @@
+﻿@model IEnumerable<StoreMgmt.Models.selloutward_model>
+
+@{
+    ViewBag.Title = "SellOutWardList";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+@Html.Raw(TempData["InsertMessage"])
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<link href="~/Scripts/DataTables/datatables.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/DataTables/datatables.min.js"></script>
+
+
+
+
+
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/jquery.dataTables.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/Buttons-2.3.6/css/buttons.bootstrap5.css" rel="stylesheet" />
+
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#example').DataTable(
+            {
+                "dom": '<"dt-buttons"Bf><"clear">lirtp',
+                "paging": true,
+                "autoWidth": true,
+
+            }
+        );
+    });
+
+</script>
+
+
+@using (Html.BeginForm())
+{
+    <div class="row my-3">
+        <div class="col-md-6">
+            @Html.ActionLink("Sell Item", "SellOutWard", null, new { @class = "btn btn-success btn-lg text-bold float-left" })
+        </div>
+
+
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            
+                            <h3 class="card-title float-right">Coils list show below</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="example" class="table table-bordered table-hover table-striped justify-content-center text-center">
+
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th>Grade</th>
+                                        <th>ItemType</th>
+                                        <th>Sell To</th>
+                                        <th>Thickness</th>
+                                        <th>size</th>
+                                        <th>Selling Weight (kg.)</th>
+                                        <th>oldWeight</th>
+                                        <th>Quantity</th>
+                                        <th>Remarks</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                            int i = 1;
+                                            foreach (var item in Model)
+                                            {
+
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>@item.code</td>
+                                                        <td>@item.itemtype</td>
+                                                        <td>@item.partyname</td>
+                                                        <td>@item.thickness</td>
+                                                        <td>@item.size</td>
+                                                        <td>@item.weight</td>
+                                                        <td>@item.oldweight</td>
+                                                          <td>@item.quantity</td>
+                                                          <td>@item.remarks</td>
+                                                        <td>@item.date</td>
+                                                    </tr>
+                                                    i++;
+
+                                                
+                                            }
+                                        
+                                        
+
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+}

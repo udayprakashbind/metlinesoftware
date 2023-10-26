@@ -1,0 +1,234 @@
+﻿@model StoreMgmt.Models.StockInward
+@*@model IEnumerable<StoreMgmt.Models.StockInward>*@
+
+@{
+    ViewBag.Title = "StockInwardDataEdit";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        //$('#quantityfield').hide();
+
+        //$('#itemweightfield').hide();
+
+
+        $("input[name='chooseItem']").change(function () {
+            var a = $(this).val();
+            //   alert(a);
+
+            if (a == 'Quantity') {
+                $('#quantityfield').show();
+                $('#itemweightfield').hide();
+
+                $('#ItemWeight').val("0");
+
+
+            } else {
+                $('#quantityfield').hide();
+                $('#itemweightfield').show();
+                $('#Quantity').val("0");
+
+
+            }
+
+        });
+
+    });
+
+</script>
+
+
+
+
+<h2>StockInwardDataEdit</h2>
+
+
+@using (Html.BeginForm("StockInwardDataEdit", "Home", FormMethod.Post))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <section class="content mt-3 " id="stockInward">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">General</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="inputStatus">Select Vender</label>
+                            <input type="hidden" name="Vend_Id" value="@Model.Vend_Id" />
+
+                            @Html.DropDownList("ddlVendor", ViewBag.ddlVendor as SelectList, Model.ddlVendor, new { @class = "form-control custom-select",@id= "choosevend" })
+
+                            @Html.ValidationMessageFor(model => model.ddlVendor, "", new { @class = "text-danger" })
+
+
+                        </div>
+                        <div class="form-group">
+                            <label for="inputStatus">Select Item</label>
+                            <input type="hidden" name="Item_Id" value="@Model.Item_Id" />
+
+                            @Html.DropDownList("ddlItem", ViewBag.ddlItem as SelectList, Model.ddlItem, new { @class = "form-control custom-select",@id= "Itemchoose" })
+
+                            @Html.ValidationMessageFor(model => model.ddlItem, "", new { @class = "text-danger" })
+
+                        </div>
+                        @*<div class="form-group">
+                                <label for="inputName">Enter Item Price </label>
+                                <input type="number" id="ItemPrice" value="@Model.ItemPrice" name="ItemPrice" class="form-control">
+                                @Html.ValidationMessageFor(model => model.ItemPrice, "", new { @class = "text-danger" }
+
+                            </div>*@
+
+
+
+                        <div class="form-group">
+                            <label for="inputStatus">Select Person Name</label>
+                            <input type="hidden" name="Person_Id" value="@Model.Person_Id" />
+
+                            @Html.DropDownList("ddlPerson", ViewBag.ddlPerson as SelectList, Model.ddlPerson, new { @class = "form-control custom-select",@id= "personchoose" })
+
+                            @Html.ValidationMessageFor(model => model.ddlPerson, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <label for="radioForItem">Choose</label> &nbsp;&nbsp;&nbsp;&nbsp;
+
+                            @{
+                                if (Model.Quantity != "0" && Model.ItemWeight == "0")
+                                {
+
+                                    <input type="radio" name="chooseItem" id="Quntity" value="Quantity" checked /> <text>Quantity</text>
+                                    <input type="radio" name="chooseItem" id="ItemWeight" value="ItemWeight" /> <text>Weight</text>
+
+                                    <div class="form-group" id="quantityfield">
+                                        <label for="inputName">Enter Item Quantity </label>
+                                        <input type="number" id="Quantity" name="Quantity" value="@Model.Quantity" class="form-control">
+                                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="form-group" id="itemweightfield">
+                                        <label for="inputName">Item Weight</label>
+                                        <input type="text" id="ItemWeight" name="ItemWeight" value="@Model.ItemWeight" class="form-control">
+                                        @Html.ValidationMessageFor(model => model.ItemWeight, "", new { @class = "text-danger" })
+
+                                    </div>
+                                }
+                                else if (Model.ItemWeight != "0" && Model.Quantity == "0")
+                                {
+
+                                    <input type="radio" name="chooseItem" id="Quntity" value="Quantity" /> <text>Quantity</text>
+                                    <input type="radio" name="chooseItem" id="ItemWeight" value="ItemWeight" checked /> <text>Weight</text>
+
+
+
+                                    <div class="form-group" id="quantityfield">
+                                        <label for="inputName">Enter Item Quantity </label>
+                                        <input type="number" id="Quantity" name="Quantity" value="@Model.Quantity" class="form-control">
+                                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="form-group" id="itemweightfield">
+                                        <label for="inputName">Item Weight</label>
+                                        <input type="text" id="ItemWeight" name="ItemWeight" value="@Model.ItemWeight" class="form-control">
+                                        @Html.ValidationMessageFor(model => model.ItemWeight, "", new { @class = "text-danger" })
+
+                                    </div>
+
+
+
+
+
+
+
+                                }
+
+
+
+                                @*<div class="form-group" id="quantityfield">
+                                        <label for="inputName">Enter Item Quantity </label>
+                                        <input type="number" id="Quantity" name="Quantity" value="@Model.Quantity" class="form-control">
+                                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+
+                                    </div>
+
+
+
+                                    <div class="form-group" id="itemweightfield">
+                                        <label for="inputName">Item Weight</label>
+                                        <input type="text" id="ItemWeight" name="ItemWeight" value="@Model.ItemWeight" class="form-control">
+                                        @Html.ValidationMessageFor(model => model.ItemWeight, "", new { @class = "text-danger" })
+
+                                    </div>*@
+
+                            }
+
+
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <label for="inputRate">Rate </label>
+                            <input type="text" id="Rate" value="@Model.Rate" name="Rate" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                            @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputRemark">Remark </label>
+                            <input type="text" id="Remark" value="@Model.Remark" name="Remark" class="form-control">
+                            @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 mx-auto  h-100 d-flex align-items-center justify-content-center">
+                <a href="@Url.Action("StockInwardList","Home")" style="width:200px;" class="btn btn-secondary btn-lg">Cancel</a>
+                &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;
+                <input type="submit" style="width:200px" value="Update" class="btn btn-success btn-lg ">
+            </div>
+        </div>
+    </section>
+}
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#Itemchoose').chosen();
+        $('#choosevend').chosen();
+        $('#personchoose').chosen();
+
+    })
+
+</script>

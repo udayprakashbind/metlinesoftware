@@ -1,0 +1,66 @@
+﻿@model StoreMgmt.Models.Person
+@using System.Data
+@using System.Data.SqlClient
+
+@{
+    ViewBag.Title = "PersonDataEdit";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+
+<center><h2>Person Data Edit</h2></center>
+
+@using (Html.BeginForm("PersonDataEdit", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+<section class="content mt-3 " id="AddPerson">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">General</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="inputName">Person Name</label>
+                        <input type="text" id="inputName" name="PersonName" value="@Model.PersonName" class="form-control">
+                        @Html.ValidationMessageFor(model => model.PersonName, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">Person Contact</label>
+                        <input type="text" id="inputName" value="@Model.Contact" name="Contact" class="form-control">
+                        @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDescription">Person Address </label>
+                        @*  <textarea id="inputDescription" name="Address" Value="@Model.Address" class="form-control" rows="4"></textarea>*@
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+
+
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 mx-auto  h-100 d-flex align-items-center justify-content-center">
+            <a href="@Url.Action("PersonMaster")" style="width:200px;" class="btn btn-secondary btn-lg">Cancel</a>
+            &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;
+            <input type="submit" style="width:200px" value="Update" class="btn btn-success btn-lg ">
+        </div>
+    </div>
+
+</section>
+}

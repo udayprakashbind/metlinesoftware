@@ -1,0 +1,320 @@
+﻿@model StoreMgmt.Models.selloutward_model
+
+@{
+    ViewBag.Title = "SellOutWard";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+@Html.Raw(TempData["alertmessage"])
+<style>
+    .rowid {
+        display: none;
+    }
+</style>
+
+<link href="~/Scripts/DataTables/datatables.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/DataTables/datatables.min.js"></script>
+
+
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/jquery.dataTables.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/Buttons-2.3.6/css/buttons.bootstrap5.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/Buttons-2.3.6/css/buttons.bootstrap4.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables/Buttons-2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/DataTables/Buttons-2.3.6/js/buttons.bootstrap4.min.js"></script>
+
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+@Html.Raw(@TempData["InsertMessage"])
+
+
+
+@using (Html.BeginForm("SellOutWard", "Home", FormMethod.Post))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <div class="row my-3">
+        <div class="col-md-6">
+            @Html.ActionLink("Show Sell List", "SellOutWardList", null, new { @class = "btn btn-success btn-lg text-bold float-left" })
+        </div>
+
+
+    </div>
+    <section class="content mt-3 ">
+        <div class="row">
+            <div class="col-md-10 mx-auto ">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">General</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="form-group" id="selectItems">
+                            <label for="inputStatus">Select Job Type</label>
+                            <select name="itemtype" id="itemtype" class="form-control" onchange="getNewVal(this)">
+                                <option value="" required>Select</option>
+                                <option value="Circle">Circle</option>
+                                <option value="Coil">Coil</option>
+                                <option value="Blank">Blank</option>
+                            </select>
+                            <p class="selectalert"></p>
+
+                            @Html.ValidationMessageFor(model => model.itemtype, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group itemtable" id="itemtable">
+                            <table id="table2" class="filtertable table table-bordered table-hover">
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th class="rowid">rowId</th>
+                                        <th>Code</th>
+                                        <th>Type</th>
+                                        <th>Weight(kg.)</th>
+                                        <th>Size(Inch)</th>
+                                        <th>Thickness (mm)</th>
+                                        <th>Remark</th>
+                                        <th>Add from</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="tableContent">
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="form-group ">
+                            <label for="inputName">Grade</label>
+                            @Html.TextBoxFor(model => model.code, new { @id = "code", @readonly = "readonly", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.code, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group ">
+                            <label for="inputName">  Weight (Kg)</label>
+                            @Html.TextBoxFor(model => model.weight, new { @class = "form-control", @id = "weight", @name = "weight" })
+
+                            @Html.ValidationMessageFor(model => model.weight, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group ">
+                            <label for="inputName">Party Name</label>
+                            @Html.TextBoxFor(model => model.partyname, new { @class = "form-control", @id = "partyname", @name = "partyname" })
+
+                            @Html.ValidationMessageFor(model => model.partyname, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group  " id="quantity">
+                            <label for="inputName">Quantity (Kg)</label>
+                            @Html.TextBoxFor(model => model.quantity, new { @id = "quantity", @name = "quantity", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.quantity, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group  " id="remarks">
+                            <label for="inputName">Remarks</label>
+                            @Html.TextBoxFor(model => model.remarks, new { @id = "remarks", @name = "remarks", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="inputName">Thickness (mm)</label>
+                            @Html.TextBoxFor(model => model.thickness, new { @class = "form-control", @id = "thickness", @name = "thickness", @readonly = "readonly", })
+                            @Html.ValidationMessageFor(model => model.thickness, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group ">
+                            <label for="inputName">size</label>
+                            @Html.TextBoxFor(model => model.size, new { @id = "size", @readonly = "readonly", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.size, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 mx-auto  h-100 d-flex align-items-center justify-content-center">
+                                <a href="@Url.Action("SellOutWard")" style="width:200px;" class="btn btn-secondary btn-lg">Cancel</a>
+                                &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;
+                                <input type="submit" style="width:200px" value="Save" class="btn btn-success btn-lg ">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="hidden" name="rowid" id="rowid" />
+                            <input type="hidden" name="addfrom" id="addfrom" />
+                            <input type="hidden" name="oldweight" id="oldweight" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+}
+
+
+<script>
+    
+    function getNewVal(item) {
+
+        var myTable = $('#table2').DataTable();
+        myTable.destroy();
+
+
+        // alert(item.value);
+        var items = item.value;
+
+        if (items == 'Circle') {
+            var url = '/Home/getotalCirlelistjson/';
+
+            $('#selectItems').find('.selectalert').hide();
+            $(document).find('.itemtable').show();
+
+
+        }
+        else if (items == 'Coil') {
+            var url = '/Home/GetotalCoillistjson/';
+            $('#selectItems').find('.selectalert').hide();
+            $(document).find('.itemtable').show();
+
+
+
+        }
+        else if (items == 'Blank') {
+            var url = '/Home/GetotatBlanklistjson/';
+            $('#selectItems').find('.selectalert').hide();
+            $(document).find('.itemtable').show();
+
+
+        }
+        else {
+            $('#selectItems').find('.selectalert').show();
+
+            $('#selectItems').find('.selectalert').html('<span style="color:red">  Please select valid Item  <span>');
+            $(document).find('.itemtable').hide();
+
+        }
+
+        $.ajax({
+            url: url,
+            dataType: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data, status, xhr) {
+                // alert(data);
+
+                var tableString = null;
+
+                var i = 0;
+                //  var CodeName=data[0].Code
+                $.each(data, function (index, value) {
+                    i++;
+                    tableString += '<tr>';
+                    tableString += '<td>' + i + '</td>';
+                    tableString += '<td class="rowid">' + value.Id + '</td>';
+                    tableString += '<td class="code">' + value.Code + '</td>';
+                    tableString += '<td class="items">' + value.JobType + '</td>';
+                    tableString += '<td class="cuttingweight">' + value.CuttingWeight + '</td>';
+                    if (value.JobType == 'Coil') {
+                        tableString += '<td class="size">' + value.JobWidth + '</td>';
+
+                    }
+                    else {
+                        tableString += '<td class="size">' + value.Diameter + '</td>';
+
+                    }
+                    tableString += '<td class="thickness">' + value.Thickness + '</td>';
+                    tableString += '<td class="remark">' + value.remark + '</td>';
+                    tableString += '<td class="addfrom">' + value.AddFrom + '</td>';
+                    tableString += '</tr>';
+                });
+              //  $('#itemtable').find('.tableContent').html(tableString);
+
+
+                $('#itemtable').find('.tableContent').html(tableString);
+                var myTable = $('#table2').DataTable({
+                    buttons: ['pdf']
+
+                });
+                myTable.draw();
+
+            },
+            error: function (xhr) {
+                alert('please select valid items');
+            }
+        });
+
+
+
+    };
+
+</script>
+<script>
+
+    
+
+    $(document).ready(function () {
+        $(document).find('.itemtable').hide();
+
+
+        //$("#table2").dataTable().fnDestroy()
+
+        //$('#table2').DataTable(
+        //    {
+        //        "dom": '<"dt-buttons"Bf><"clear">lirtp',
+        //        "paging": true,
+        //        "autoWidth": true,
+
+
+        //    }
+        //);
+
+        $(document).on('click', '.filtertable tbody tr', function () {
+
+            var rowid = $(this).find('.rowid').text();
+            var thickness = $(this).find('.thickness').text();
+            var oldweight = $(this).find('.cuttingweight').text();
+            var size = $(this).find('.size').text();
+            var addfrom = $(this).find('.addfrom').text();
+            //  var rowId = $(this).find('#hiddenId').text();
+            var code = $(this).find('.code').text();
+
+            //  alert(code);
+            // $('#Weight').val('');
+            $('#rowid').val(rowid);
+            $('#oldweight').val(oldweight);
+            $('#thickness').val(thickness);
+            $('#code').val(code);
+            $('#size').val(size);
+            $('#addfrom').val(addfrom);
+
+        });
+
+    });
+
+</script>
+

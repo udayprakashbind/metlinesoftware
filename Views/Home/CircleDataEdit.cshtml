@@ -1,0 +1,91 @@
+﻿@model StoreMgmt.Models.Circle_model
+
+@{
+    ViewBag.Title = "CircleDataEdit";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+@using System.Data
+@using System.Data.SqlClient
+<script>
+
+
+
+</script>
+
+<h2>Selected Circle For Edit</h2>
+
+
+
+@using (Html.BeginForm("CircleDataEdit", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <section class="content mt-3 ">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">General</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="inputName">remark</label>
+                            <input type="text" id="inputName" name="Code" value="@Model.Code" class="form-control">
+                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">Circle Name</label>
+                            <input type="text" id="inputName" name="CircleName" value="@Model.CircleName" class="form-control">
+                            @Html.ValidationMessageFor(model => model.CircleName, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">Thickness (mm)</label>
+                            <input type="text" id="inputThickness" name="Thickness" value="@Model.Thickness" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                            @Html.ValidationMessageFor(model => model.Thickness, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">Size (Inch)</label>
+                            <input type="text" id="inputWidth" name="Width" value="@Model.Width" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                            @Html.ValidationMessageFor(model => model.Width, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputName">Weight (kg.)</label>
+                            <input type="text" id="inputWeight" name="Weight" value="@Model.Weight" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                            @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="inputName">Remark</label>
+                            <input type="text" id="remark" name="remark" value="@Model.remark" class="form-control">
+                            @Html.ValidationMessageFor(model => model.remark, "", new { @class = "text-danger" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 mx-auto  h-100 d-flex align-items-center justify-content-center">
+                <a href="@Url.Action("CircleList")" style="width:200px;" class="btn btn-secondary btn-lg">Cancel</a>
+                &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;
+                <input type="submit" style="width:200px" value="Save" class="btn btn-success btn-lg ">
+            </div>
+        </div>
+    </section>
+}

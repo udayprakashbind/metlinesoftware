@@ -1,0 +1,444 @@
+﻿@model StoreMgmt.Models.Job
+
+@{
+    ViewBag.Title = "CreateJob";
+    Layout = "~/Views/Shared/_AdminLayouts.cshtml";
+}
+@Html.Raw(@TempData["selectslit"])
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<link href="~/Scripts/DataTables/datatables.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/DataTables/datatables.min.js"></script>
+
+
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/jquery.dataTables.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/DataTables-1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/Buttons-2.3.6/css/buttons.bootstrap5.css" rel="stylesheet" />
+<link href="~/Scripts/DataTables/Buttons-2.3.6/css/buttons.bootstrap4.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables/Buttons-2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/DataTables/Buttons-2.3.6/js/buttons.bootstrap4.min.js"></script>
+
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+<style>
+    .hiddenId {
+        display: none;
+    }
+
+    .circlehide {
+        display: none;
+    }
+
+    .coilhide {
+        display: none;
+    }
+</style>
+
+
+
+
+<script>
+    function confirmSubmit() {
+        if (!confirm("Do you really want to do this?")) {
+            return false;
+        }
+        return true;
+    }
+
+    function calculateValue() {
+        var thick = parseFloat($('#Thickness').val());
+        var di = parseFloat($('#Diameter').val());
+        var jobweight = parseFloat($('#CuttingWeight').val()).toFixed(2);
+        var cal = ((((thick * 10) / 2.54) * di * di) / 1000).toFixed(6);
+        //alert(cal);
+        var pices = Math.trunc(jobweight / cal);
+
+        // var pices = Math.trunc((thick * 10 * di * di) / 2.54);
+        $('#Pices').val(pices);
+        // var ddl = $('#JobName').val();
+
+        //  console.log(thick, di, ddl, pices);
+    };
+
+
+    function calculateRecovery() {
+        var recovery = parseFloat($('#Recovery').val());
+        if (recovery != "undefined" && recovery) {
+            var oldWeight = parseFloat($('#oldWeight').val()).toFixed(2);
+            var jobWeight = parseFloat($('#CuttingWeight').val()).toFixed(2);
+            var Recoveryweight = parseFloat((jobWeight * 100) / recovery).toFixed(2);
+            var BalancCoilWeight = parseFloat(oldWeight - Recoveryweight).toFixed(2);
+            var scrap = parseFloat(Recoveryweight - jobWeight).toFixed(2);
+
+            $('#ConsumeWeight').val(Recoveryweight);
+            $('#BalanceCoilWeight').val(BalancCoilWeight);
+            $('#Scrap').val(scrap);
+
+        }
+        else {
+
+            $('#ConsumeWeight').val('');
+            $('#BalanceCoilWeight').val('');
+
+        }
+
+    };
+
+</script>
+
+<script>
+
+    function getNewVal(item) {
+        // alert(item.value);
+        var Job = item.value;
+
+
+        if (Job == 'Circle') {
+            $('.coilhide').show();
+
+            $('.CuttingWeight').show();
+            $('.ConsumeWeight').show();
+            $('.Recovery').show();
+            $('.Slit').show();
+            $('.slitWeight').show();
+            $('.slitWidth').show();
+            $('.Diameter').show();
+            $('.Pices').show();
+            $('.ScrapWeight').show();
+        }
+        else if (Job == 'Coil') {
+            $('.coilhide').show();
+            $('.CuttingWeight').show();
+            $('.ConsumeWeight').hide();
+            $('.Recovery').hide();
+            $('.Slit').hide();
+            $('.slitWeight').hide();
+            $('.slitWidth').hide();
+            $('.Diameter').hide();
+            $('.Pices').hide();
+            $('.ScrapWeight').hide();
+        }
+        else if (Job == 'Blank') {
+            $('.coilhide').show();
+            $('.CuttingWeight').show();
+            $('.ConsumeWeight').show();
+            $('.Recovery').show();
+            $('.Slit').show();
+            $('.slitWeight').show();
+            $('.slitWidth').show();
+            $('.Diameter').show();
+            $('.Pices').show();
+            $('.ScrapWeight').show();
+        }
+        else {
+            $('.coilhide').hide();
+
+            $('.CuttingWeight').hide();
+            $('.ConsumeWeight').hide();
+            $('.Recovery').hide();
+            $('.Slit').hide();
+            $('.slitWeight').hide();
+            $('.slitWidth').hide();
+            $('.Diameter').hide();
+            $('.Pices').hide();
+            $('.ScrapWeight').hide();
+        }
+
+    };
+
+
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+
+        $('#table2').DataTable(
+            {
+                "dom": '<"dt-buttons"Bf><"clear">lirtp',
+                "paging": true,
+                "autoWidth": true,
+
+
+            }
+        );
+
+
+        $(document).on('click', 'table#table2 tbody tr', function () {
+
+            var thickness = $(this).find('.thickness').text();
+            var weight = $(this).find('.weight').text();
+            var width = $(this).find('.width').text();
+            var rowId = $(this).find('#hiddenId').text();
+            var code = $(this).find('.code').text();
+            var remark = $(this).find('.remark').text();
+            var CoilName = $(this).find('.CoilName').text();
+            // alert(remark);
+            $('#Weight').val('');
+            $('#oldWeight').val(weight);
+            $('#oldWidth').val(width);
+            $('#Thickness').val(thickness);
+            $('#rowId').val(rowId);
+            $('#Code').val(code);
+            $('#remark').val(remark);
+            $('#CoilName').val(CoilName);
+            $('#SelectedCoilWeight').val(weight);
+            calculateRecovery();
+
+        });
+
+        $("input[name='slit']").change(function () {
+            var a = $(this).val();
+            //   alert(a);
+
+            if (a == 'Yes') {
+                $('#slitWeight').show();
+                $('#slitWidth').show();
+
+
+            } else if (a == 'No') {
+                $('#slitWeight').hide();
+                $('#slitWidth').hide();
+
+            } else {
+                $('#slitWeight').hide();
+                $('#slitWidth').hide();
+
+            }
+
+        });
+
+
+
+
+
+    });
+
+</script>
+
+
+<div class="row my-3">
+    <div class="col-md-6">
+        @Html.ActionLink("Show Job List", "joblist", null, new { @class = "btn btn-success btn-lg text-bold float-left" })
+    </div>
+
+
+</div>
+
+
+@using (Html.BeginForm("CreateJob", "Home", FormMethod.Post))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <section class="content mt-3 ">
+        <div class="row">
+            <div class="col-md-10 mx-auto ">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Create Job</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="form-group">
+                            <label for="inputStatus">Select Job Type</label>
+                            <select name="JobName" id="JobName" class="form-control" onchange="getNewVal(this);">
+                                <option value="" required>Select</option>
+                                <option value="Circle">Circle</option>
+                                <option value="Coil">Coil</option>
+                                <option value="Blank">Blank</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.JobName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group coilhide" id="coilhide">
+                            <table id="table2" class="filtertable table table-bordered table-hover">
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th>Sr.No.</th>
+                                        <th class="hiddenId">rowId</th>
+                                        <th>Grade</th>
+                                        <th>Remark</th>
+                                        <th>Coil Name</th>
+                                        <th>Thickness (mm)</th>
+                                        <th>Width (mm)</th>
+                                        <th>Weight (Kg)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int b = 1;
+                                        foreach (var item in ViewBag.Coil)
+                                        {
+                                            //if (item.Weight != "0" && item.Weight != null && item.Weight != "")
+                                            //{
+
+                                            <tr>
+                                                <td>@b</td>
+                                                <td class="hiddenId" id="hiddenId">@item.Id</td>
+                                                <td class="code">@item.Code</td>
+                                                <td class="remark">@item.remark</td>
+                                                <td class="CoilName">@item.CoilName</td>
+                                                <td class="thickness">@item.Thickness</td>
+                                                <td class="width">@item.Width</td>
+                                                <td class="weight">@item.Weight</td>
+                                            </tr>
+                                            b++;
+
+                                            // }
+
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="form-group ">
+                            <label for="inputName"> Remark</label>
+                            @Html.TextBoxFor(model => model.remark, new { @class = "form-control", @id = "remark", @name = "remark" })
+
+                            @Html.ValidationMessageFor(model => model.remark, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group CuttingWeight">
+                            <label for="inputName">  Weight (Kg)</label>
+                            @Html.TextBoxFor(model => model.CuttingWeight, new { @class = "form-control", @id = "CuttingWeight", @name = "CuttingWeight" })
+
+                            @Html.ValidationMessageFor(model => model.CuttingWeight, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group Recovery">
+                            <label for="inputName">Recovery (%)</label>
+                            @*@Html.TextBoxFor(model => model.Recovery, new { @onblur = "calculateRecovery()", @class = "form-control", @id = "Recovery", @name = "Recovery" })*@
+
+                            <input type="text" id="Recovery" name="Recovery" onblur="calculateRecovery()" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+
+
+                            @Html.ValidationMessageFor(model => model.Recovery, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+
+                        <div class="form-group ConsumeWeight">
+                            <label for="inputName">Consume Coil Weight (Kg)</label>
+                            @Html.TextBoxFor(model => model.ConsumeWeight, new { @class = "form-control", @id = "ConsumeWeight", @name = "ConsumeWeight", })
+
+                            @Html.ValidationMessageFor(model => model.ConsumeWeight, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group ScrapWeight " id="ScrapWeight">
+                            <label for="inputName">Scrap Weight (Kg)</label>
+                            @Html.TextBoxFor(model => model.Scrap, new { @id = "Scrap", @name = "Scrap", @readonly = "readonly", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Scrap, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+
+
+
+
+
+
+                        <div class="form-group Slit">
+                            <label for="radioForSlit">Slit</label> &nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <input type="radio" name="slit" id="Yes" value="Yes" />&nbsp; <text>Yes</text>
+                            &nbsp;&nbsp; <input type="radio" name="slit" id="No" value="No" /> &nbsp; <text>No</text>
+
+                        </div>
+
+
+                        <div class="form-group slitWeight " id="slitWeight">
+                            <label for="inputName">Slit Weight (Kg)</label>
+                            @Html.TextBoxFor(model => model.SlitWeight, new { @id = "SlitWeight", @name = "SlitWeight", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SlitWeight, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group slitWidth " id="slitWidth">
+                            <label for="inputName">slit Width (mm)</label>
+                            @Html.TextBoxFor(model => model.SlitWidth, new { @id = "SlitWidth", @name = "SlitWidth", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SlitWidth, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+                        <div class="form-group">
+                            @*     @Html.TextBoxFor(model => model.Weight, new { @class = "form-control", @id = "Weight", @name = "Weight", @readonly = "readonly", @type = "hidden" })*@
+                            <input type="hidden" name="oldWeight" id="oldWeight" class="form-control">
+                            <input type="hidden" name="oldWidth" id="oldWidth" class="form-control">
+                        </div>
+
+                        @Html.TextBoxFor(model => model.BalanceCoilWeight, new { @class = "form-control", @id = "BalanceCoilWeight", @name = "BalanceCoilWeight", @readonly = "readonly", @type = "hidden" })
+
+
+                        <div class="form-group">
+                            <label for="inputName">Thickness (mm)</label>
+                            @Html.TextBoxFor(model => model.Thickness, new { @class = "form-control", @id = "Thickness", @name = "Thickness", @readonly = "readonly", })
+                            @Html.ValidationMessageFor(model => model.Thickness, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="form-group Diameter">
+                            <label for="inputName">Diameter (Inch)</label>
+                            @Html.TextBoxFor(model => model.Diameter, new { @onblur = "calculateValue()", @class = "form-control", @id = "Diameter", @name = "Diameter" })
+                            @Html.ValidationMessageFor(model => model.Diameter, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group Pices">
+                            <label for="inputName">Pices</label>
+                            @Html.TextBoxFor(model => model.Pices, new { @id = "Pices", @readonly = "readonly", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Pices, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <input type="hidden" name="rowId" id="rowId" />
+                            <input type="hidden" name="Code" id="Code" />
+                            @*<input type="hidden" name="remark" id="remark" />*@
+                            <input type="hidden" name="CoilName" id="CoilName" />
+                            <input type="hidden" name="Weight" id="SelectedCoilWeight" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 mx-auto  h-100 d-flex align-items-center justify-content-center">
+                <a href="@Url.Action("CreateJob")" style="width:200px;" class="btn btn-secondary btn-lg">Cancel</a>
+                &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;
+                <input type="submit" style="width:200px" value="Save" onClick='return confirmSubmit()' class="btn btn-success btn-lg ">
+            </div>
+        </div>
+    </section>
+
+
+}
